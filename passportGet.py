@@ -9,7 +9,7 @@ import xlwt
 
 def listPP():
 	for root, dirs, files in os.walk('.\\passport\\'):  #root:当前目录路径; dirs:当前路径下所有子目录; files:当前路径下所有非目录子文件
-		print(files) #files:当前路径下所有非目录子文件
+		print(files)
 		return files
 
 def getInfo():
