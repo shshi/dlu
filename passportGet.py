@@ -2,7 +2,7 @@
 #import tesserocr
 #print(tesserocr.file_to_text('.\pp\LX15101140-PP'))
 #import pytesseract
-#from PIL import Image
+from PIL import Image,ImageFilter
 import os
 import re
 import xlwt
@@ -16,7 +16,11 @@ def vsGet(pic_name,txt,vsdata):
 	try:
 		Surname=re.findall(r'R<CHN(.*?)<<',txt)[0].replace('\'','').replace('’','').replace(' ','')
 		givenName=re.findall(r'R<CHN.*?<<(.*?)<<<',txt)[0].replace(' ','').replace('<',' ').replace('\'','').replace('’','')
-		vs_num=re.findall(r'\n(.*?)<.*?<<',txt)
+		if givenName=='' and '<' in Surname:
+			Surname=Surname.replace('<',' ')
+			givenName=Surname
+			Surname=''
+		vs_num=re.findall(r'[\s]+(.*?)<.*?<<',txt)
 		#print (vs_num)
 		vs_num=[i for i in vs_num if i !='']
 		vs_num=vs_num[-1].replace('\'','').replace('’','').replace(' ','').replace('z','2').replace('Z','2').replace('D','0').replace('O','0').replace('o','0')
@@ -36,6 +40,7 @@ def vsGet(pic_name,txt,vsdata):
 		#print (vsdata)
 	except Exception as e:
 		print (pic_name,e)
+		#continue
 		vsdata.append([pic_name])
 	return vsdata
 		
@@ -50,7 +55,9 @@ def ppGet(pic_name,txt,PPdata):
 			Nation=Surname[0:3]
 			Surname=Surname[3:]
 		givenName=re.findall(r'<<(.*?)<<<<<<<<<<<',txt)[0].replace(' ','').replace('<',' ').replace('\'','').replace('’','')
-		PPno=re.findall(r'<<<<<<<\n(.*?)<',txt)[0].replace('\'','').replace('’','').replace(' ','')
+		PPno=re.findall(r'<<<<<<<[\s]+(.*?)<',txt)[0].replace('\'','').replace('’','').replace(' ','').replace('\n','').replace('\t','')
+		#print (txt)
+		#print ('ppno: %s'%PPno)
 		mix=re.findall(r'<(.*?)<<<<',txt)
 		mix=[i for i in mix if i !='']
 		mix=mix[-1].replace('\'','').replace('’','').replace(' ','').replace('z','2').replace('Z','2').replace('D','0').replace('O','0').replace('o','0')
@@ -100,26 +107,30 @@ def split():
 	vsdata=[['照片名','护照姓','护照名','居留许可号','生日','性别','许可有效期至']]
 	PPdata=[['照片名','护照姓','护照名','国籍','护照号码','生日','性别','护照有效期至']]
 	for pic_name in lstPic:
-		print (pic_name)
-		result=os.popen('tesseract .\\passport\\%s rst -l eng --psm 1'%pic_name)#-psm 7
-		res = result.read()  
-		for line in res.splitlines():  
-			print (line+'\n') 
-		with open('rst.txt','r',encoding='UTF-8') as txt:
-			txt=txt.read()
-			if 'R<CHN' in txt:
-				vsGet(pic_name,txt,vsdata)
-			else:
-				ppGet(pic_name,txt,PPdata)
+		try:
+			print (pic_name)
+			result=os.popen('tesseract .\\tmp\\%s rst -l eng --psm 1'%pic_name)#-psm 7
+			res = result.read()  
+			for line in res.splitlines():  
+				print (line+'\n') 
+			with open('rst.txt','r',encoding='UTF-8') as txt:
+				txt=txt.read()
+				if 'R<CHN' in txt:
+					vsGet(pic_name,txt,vsdata)
+				else:
+					ppGet(pic_name,txt,PPdata)
+		except Exception as e:
+			print (pic_name,e)
 	wtInfo(PPdata,vsdata)
 
-def pil():
+def conv():
 	lstPic=listPic()
 	for pic_name in lstPic:
 		path='.\\passport\\'+pic_name
 		image=Image.open(path)
+		#image.filter(ImageFilter.SMOOTH).save('.\\tmp\\11-%s'%pic_name,quality=95)
 		image=image.convert('L')
-		threshold=130
+		threshold=110#130
 		table=[]
 		for i in range(256):
 			if i<threshold:
@@ -128,9 +139,39 @@ def pil():
 				table.append(1)
 		image=image.point(table,'1')
 		#image.show()
-		image.save('.\\test\\%s'%pic_name,quality=95)
-		print ('new image saved')
-#pil()
+		
+
+		data = image.getdata()
+		w,h = image.size
+		black_point = 0
+		 
+		for x in range(1,w-1):
+			for y in range(1,h-1):
+				mid_pixel = data[w*y+x] # 中央像素点像素值
+				if mid_pixel <50: # 找出上下左右四个方向像素点像素值
+					top_pixel = data[w*(y-1)+x]
+					left_pixel = data[w*y+(x-1)]
+					down_pixel = data[w*(y+1)+x]
+					right_pixel = data[w*y+(x+1)]
+		 
+					# 判断上下左右的黑色像素点总个数
+					if top_pixel <10:#10
+						black_point += 1
+					if left_pixel <10:
+						black_point += 1
+					if down_pixel <10:
+						black_point += 1
+					if right_pixel <10:
+						black_point += 1
+					if black_point <1:
+						image.putpixel((x,y),255)
+					#print('blackpoint: %d'%black_point)
+					black_point = 0
+		image.filter(ImageFilter.SMOOTH)
+		image.save('.\\tmp\\%s'%pic_name)
+		print ('%s converted'%pic_name)
+
+conv()
 split()
 
 
@@ -139,6 +180,8 @@ references:
 https://www.cnblogs.com/Jimc/p/9772930.html
 https://blog.csdn.net/nextdoor6/article/details/51283117
 https://www.cnblogs.com/yizhenfeng168/p/6953330.html
+降噪：
+https://blog.csdn.net/t8116189520/article/details/80342512
 def main():
 	image = Image.open(".\\test\\7.jpeg")
 	#image.show() #打开图片1.jpg
