@@ -22,7 +22,7 @@ def ppGet(pic_name,image,info,PPdata):
 		print (givenName)
 		if '<' in info[-1][:15]:
 			ppNo=re.findall(r'(^.*?)<',info[-1])[0].replace('\'','').replace('’','').replace('\t','')
-			ppNo[2:].replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2')
+			ppNo=ppNo[:2]+ppNo[2:].replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2')
 			print (ppNo)
 			bdate=re.findall(r'^.*?<.{4}(.{6})',info[-1])[0].replace('\'','').replace('’','').replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2')
 			if int(bdate[0])>5:
@@ -40,7 +40,7 @@ def ppGet(pic_name,image,info,PPdata):
 			PPdata.append([pic_name,Surname,givenName,nation,ppNo,bdate,sex,expire])
 		else:
 			ppNo=re.findall(r'(^.{9})',info[-1])[0].replace('\'','').replace('’','').replace('\t','')
-			ppNo[2:].replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2')
+			ppNo=ppNo[:2]+ppNo[2:].replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2')
 			print (ppNo)
 			bdate=re.findall(r'^.{13}(.{6})',info[-1])[0].replace('\'','').replace('’','').replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2')
 			if int(bdate[0])>5:
