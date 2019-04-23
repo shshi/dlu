@@ -219,9 +219,12 @@ references:
 https://www.cnblogs.com/Jimc/p/9772930.html
 https://blog.csdn.net/nextdoor6/article/details/51283117
 https://www.cnblogs.com/yizhenfeng168/p/6953330.html
+
 降噪：
 https://blog.csdn.net/t8116189520/article/details/80342512
-OcrB字体训练网站：
+https://blog.csdn.net/chouzhou9701/article/details/82587833
+
+字体训练网站：
 http://trainyourtesseract.com/
 '''
  
