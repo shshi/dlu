@@ -22,7 +22,9 @@ def ppGet(pic_name,image,info,PPdata):
 		print (givenName)
 		if '<' in info[-1][:15]:
 			ppNo=re.findall(r'(^.*?)<',info[-1])[0].replace('\'','').replace('’','').replace('\t','')
-			ppNo=ppNo[:2]+ppNo[2:].replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2')
+			'''if ppNo[1] in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
+				ppNo0=ppNo[0].replace('1','I').replace('5','S').replace('8','B').replace('2','Z')
+				ppNo=ppNo0+ppNo[1]+ppNo[2:].replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2').replace('I','1')'''
 			print (ppNo)
 			bdate=re.findall(r'^.*?<.{4}(.{6})',info[-1])[0].replace('\'','').replace('’','').replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2')
 			if int(bdate[0])>5:
@@ -34,15 +36,18 @@ def ppGet(pic_name,image,info,PPdata):
 			if sex=='H' or sex=='M':
 				sex='M'
 			print (sex)
-			expire=re.findall(r'^.*?<.{10}..(.{6})',info[-1])[0].replace('\'','').replace('’','').replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2')
+			expire=re.findall(r'^.*?<.{10}..(.{6})',info[-1])[0].replace('\'','').replace('’','').replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2').replace('I','1')
 			expire='20'+expire
 			print (expire)
 			PPdata.append([pic_name,Surname,givenName,nation,ppNo,bdate,sex,expire])
 		else:
 			ppNo=re.findall(r'(^.{9})',info[-1])[0].replace('\'','').replace('’','').replace('\t','')
-			ppNo=ppNo[:2]+ppNo[2:].replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2')
+			'''if ppNo[1] in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
+				ppNo0=ppNo[0].replace('1','I').replace('5','S').replace('8','B').replace('2','Z')
+				ppNo=ppNo0+ppNo[1]+ppNo[2:].replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2').replace('I','1')'''
+			#ppNo=ppNo[:2]+ppNo[2:].replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2')
 			print (ppNo)
-			bdate=re.findall(r'^.{13}(.{6})',info[-1])[0].replace('\'','').replace('’','').replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2')
+			bdate=re.findall(r'^.{13}(.{6})',info[-1])[0].replace('\'','').replace('’','').replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2').replace('I','1')
 			if int(bdate[0])>5:
 				bdate='19'+bdate
 			else:
@@ -52,7 +57,7 @@ def ppGet(pic_name,image,info,PPdata):
 			if sex=='H' or sex=='M':
 				sex='M'
 			print (sex)
-			expire=re.findall(r'.{21}(.{6})',info[-1])[0].replace('\'','').replace('’','').replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2')
+			expire=re.findall(r'.{21}(.{6})',info[-1])[0].replace('\'','').replace('’','').replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2').replace('I','1')
 			expire='20'+expire
 			print (expire)
 			PPdata.append([pic_name,Surname,givenName,nation,ppNo,bdate,sex,expire])
@@ -75,7 +80,7 @@ def vsGet(pic_name,image,info,vsdata):
 		nationr=re.findall(r'%s<.(.{3}).*?'%vsNo,info[-1])[0]
 		nation=nationr.replace('1','I').replace('5','S').replace('8','B').replace('2','Z')
 		print (nation)
-		bdate=re.findall(r'%s(.{6})'%nationr,info[-1])[0].replace('\'','').replace('’','').replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2')
+		bdate=re.findall(r'%s(.{6})'%nationr,info[-1])[0].replace('\'','').replace('’','').replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2').replace('I','1')
 		if int(bdate[0])>5:
 			bdate='19'+bdate
 		else:
@@ -85,7 +90,7 @@ def vsGet(pic_name,image,info,vsdata):
 		if sex=='H' or sex=='M':
 			sex='M'
 		print (sex)
-		expire=re.findall(r'%s.{6}..(.{6})'%nationr,info[-1])[0].replace('\'','').replace('’','').replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2')
+		expire=re.findall(r'%s.{6}..(.{6})'%nationr,info[-1])[0].replace('\'','').replace('’','').replace('Z','2').replace('D','0').replace('O','0').replace('B','8').replace('S','5').replace('?','2').replace('I','1')
 		expire='20'+expire
 		print (expire)
 		vsdata.append([pic_name,Surname,givenName,nation,vsNo,bdate,sex,expire])
@@ -181,7 +186,7 @@ def main():
 			image = Image.open(pic_path)
 			image = conv(image,pic_path,pic_name)
 			#txt = pytesseract.image_to_string(image,lang='eng',config='--psm 1 --oem 3 -c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ<0123456789')
-			txt = pytesseract.image_to_string(image,lang='eng',config='--psm 1')
+			txt = pytesseract.image_to_string(image,lang='OcrB',config='--psm 1')
 			txt=txt.upper().split('\n')
 			#print (txt)
 			info=[]
@@ -192,7 +197,7 @@ def main():
 			#print (info)
 			if len(info)==0:
 				image=image.transpose(Image.ROTATE_180)
-				txt = pytesseract.image_to_string(image,lang='eng',config='--psm 1')
+				txt = pytesseract.image_to_string(image,lang='OcrB',config='--psm 1 ')
 				txt=txt.upper().split('\n')
 				for line in txt:
 					line=line.strip().replace('\'','').replace('’','').replace(' ','')
@@ -216,6 +221,8 @@ https://blog.csdn.net/nextdoor6/article/details/51283117
 https://www.cnblogs.com/yizhenfeng168/p/6953330.html
 降噪：
 https://blog.csdn.net/t8116189520/article/details/80342512
+OcrB字体训练网站：
+http://trainyourtesseract.com/
 '''
  
 if __name__ == '__main__':
