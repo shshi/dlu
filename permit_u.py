@@ -46,11 +46,12 @@ for row in todolist:
 	date_run=date.add_run(date_txt)
 	font = date_run.font
 	font.size = docx.shared.Pt(18)
-	#paragraph_format = date.paragraph_format
-	#paragraph_format.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-	ymd_202=str(row[8]).split('.')
-	ymd_202=ymd_202[0]+'年'+ymd_202[1]+'月'
-	JW202=ymd_202
+	if '年'in row[8]:
+		JW202=row[8]
+	else:
+		ymd_202=str(row[8]).split('.')
+		ymd_202=ymd_202[0]+'年'+ymd_202[1]+'月'
+		JW202=ymd_202
 
 	body=doc.add_paragraph()
 	
