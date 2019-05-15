@@ -54,7 +54,7 @@ for row in todolist:
 
 
 	body_txt='''    兹有我校 %s 籍学生 %s，性别: %s, 护照号码为 %s。其居留许可到期，现需办理学习居留许可延期手续，时间为%s，请按有关规定给予办理为谢。\n    居留许可到期时间：%s\n    JW202表到期时间：%s\n\n\n\n
-	'''%(row[5],row[2],row[4],row[6],ymd_todo,ymd_permit,JW202)
+	'''%(row[5],row[2].upper(),row[4],row[6],ymd_todo,ymd_permit,JW202)
 	body=doc.add_paragraph()
 	body_run=body.add_run(body_txt)
 	paragraph_format = body.paragraph_format
