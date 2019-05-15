@@ -65,7 +65,7 @@ for row in todolist:
 	
 	body2='籍学生'
 	body2_run=body.add_run(body2)
-	fill2='%s'%row[2]
+	fill2='%s'%row[2].upper()
 	fill2_run=body.add_run(fill2)
 	font = fill2_run.font
 	font.underline = True
