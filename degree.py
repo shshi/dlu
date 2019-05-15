@@ -13,7 +13,7 @@ name_list = sheet1.col_values(4)
 for i in name_list:
 	i=i.strip()
 
-name=input('请输入学生英文名（可右键粘贴）：')
+name=input('请输入学生英文名：')
 name=name.upper()
 
 if name in name_list:
