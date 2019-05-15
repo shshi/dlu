@@ -46,7 +46,7 @@ for row in todolist:
 	date_run=date.add_run(date_txt)
 	font = date_run.font
 	font.size = docx.shared.Pt(18)
-	if '年'in row[8]:
+	if '年'in str(row[8]):
 		JW202=row[8]
 	else:
 		ymd_202=str(row[8]).split('.')
