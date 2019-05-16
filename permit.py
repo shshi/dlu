@@ -9,6 +9,11 @@ workbook = xlrd.open_workbook('todolist.xlsx')
 table = workbook.sheets()[0]
 nrows = table.nrows
 ncols = table.ncols
+new=input('此批学生是否为新生？（请输入Y或者N）：')
+while new != "Y" and new != "N":
+	print ("输入错误，请请输入Y或者N（大写） ")
+	new = input('此批学生是否为新生？（请输入Y或者N）：')
+
 for i in range(0,nrows):
 	row_list=[]
 	rowValues= table.row_values(i) 
@@ -17,11 +22,15 @@ todolist.remove(todolist[0])
 #print (todolist)
 for row in todolist:
 	print (row)
-	ymd_permit=row[7].split('.')
-	if int(ymd_permit[1])==1:
-		ymd_todo=ymd_permit[0]+'年'+'12'+'月'+ymd_permit[-1]+'日'
+	ymd_permit=str(row[7]).replace('/','.')
+	ymd_permit=ymd_permit.split('.')
+	if new == 'Y':
+		ymd_todo=str(int(ymd_permit[0])+1)+'年'+ymd_permit[1]+'月'+ymd_permit[-1]+'日'
 	else:
-		ymd_todo=str(int(ymd_permit[0])+1)+'年'+str(int(ymd_permit[1])-1)+'月'+ymd_permit[-1]+'日'
+		if int(ymd_permit[1])==1:
+			ymd_todo=ymd_permit[0]+'年'+'12'+'月'+ymd_permit[-1]+'日'
+		else:
+			ymd_todo=str(int(ymd_permit[0])+1)+'年'+str(int(ymd_permit[1])-1)+'月'+ymd_permit[-1]+'日'
 	ymd_permit=ymd_permit[0]+'年'+ymd_permit[1]+'月'+ymd_permit[-1]+'日'
 	#print (ymd_todo)
 	#doc = Document()
@@ -48,13 +57,16 @@ for row in todolist:
 	font.size = docx.shared.Pt(18)
 	#paragraph_format = date.paragraph_format
 	#paragraph_format.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-	ymd_202=str(row[8]).split('.')
+	ymd_202=str(row[8]).replace('/','.')
+	ymd_202=ymd_202.split('.')
 	ymd_202=ymd_202[0]+'年'+ymd_202[1]+'月'
 	JW202=ymd_202
-
-
+	try:
+		ppNo=str(int(row[6]))
+	except:
+		ppNo=row[6]
 	body_txt='''    兹有我校 %s 籍学生 %s，性别: %s, 护照号码为 %s。其居留许可到期，现需办理学习居留许可延期手续，时间为%s，请按有关规定给予办理为谢。\n    居留许可到期时间：%s\n    JW202表到期时间：%s\n\n\n\n
-	'''%(row[5],row[2].upper(),row[4],row[6],ymd_todo,ymd_permit,JW202)
+	'''%(row[5],row[2].upper(),row[4],ppNo,ymd_todo,ymd_permit,JW202)
 	body=doc.add_paragraph()
 	body_run=body.add_run(body_txt)
 	paragraph_format = body.paragraph_format
