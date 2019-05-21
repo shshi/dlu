@@ -11,8 +11,7 @@ nrows = table.nrows
 ncols = table.ncols
 new=input('此批学生是否为新生？（请输入Y或者N）：')
 while new != "Y" and new != "N":
-	print ("输入错误，请请输入Y或者N（大写） ")
-	new = input('此批学生是否为新生？（请输入Y或者N）：')
+	new = input('输入错误，请请输入Y或者N（大写）：')
 
 for i in range(0,nrows):
 	row_list=[]
@@ -63,21 +62,116 @@ for row in todolist:
 	except:
 		ppNo=row[6]
 	if new=='Y':
-		body_txt='''    兹有我校 %s 籍学生 %s，性别: %s, 护照号码为 %s。其居留许可到期，现需办理学习居留许可延期手续，时间为%s，请按有关规定给予办理为谢。\n    JW202表到期时间：%s\n\n\n\n
-		'''%(row[5],row[2].upper(),row[4],ppNo,ymd_todo,JW202)
+		'''body_txt="    兹有我校 %s 籍学生 %s，性别: %s, 护照号码为 %s。其居留许可到期，现需办理学习居留许可延期手续，时间为%s，请按有关规定给予办理为谢。\n    JW202表到期时间：%s\n\n\n\n"%(row[5],row[2].upper(),row[4],ppNo,ymd_todo,JW202)
 		body=doc.add_paragraph()
 		body_run=body.add_run(body_txt)
 		paragraph_format = body.paragraph_format
 		paragraph_format.line_spacing = docx.shared.Pt(30)
-		font.underline = False
+		font.underline = False'''#不加下划线
+		body=doc.add_paragraph()
+		
+		body1='    兹有我校'
+		body1_run=body.add_run(body1)
+		paragraph_format = body.paragraph_format
+		paragraph_format.line_spacing = docx.shared.Pt(30)
+		fill1=' %s '%row[5]
+		fill1_run=body.add_run(fill1)
+		font = fill1_run.font
+		font.underline = True
+		
+		body2='籍学生'
+		body2_run=body.add_run(body2)
+		fill2='%s'%row[2].upper()
+		fill2_run=body.add_run(fill2)
+		font = fill2_run.font
+		font.underline = True
+		
+		body3=', 性别：'
+		body3_run=body.add_run(body3)
+		fill3='%s'%row[4]
+		fill3_run=body.add_run(fill3)
+		font = fill3_run.font
+		font.underline = True
+
+		body4='，护照号码为'
+		body4_run=body.add_run(body4)
+		fill4='%s'%ppNo
+		fill4_run=body.add_run(fill4)
+		font = fill4_run.font
+		font.underline = True
+
+		body5='。其居留许可到期，现需办理学习居留许可延期手续，时间为'
+		body5_run=body.add_run(body5)
+		fill5='%s'%ymd_todo
+		fill5_run=body.add_run(fill5)
+		font = fill5_run.font
+		font.underline = True
+
+		body6='，请按有关规定给予办理为谢。\n    居留许可到期时间：'
+		body6_run=body.add_run(body6)
+		fill6='%s'%ymd_permit
+		fill6_run=body.add_run(fill6)
+		font = fill6_run.font
+		font.underline = True
+
+		body8='\n\n\n\n'
+		body8_run=body.add_run(body8)
 	else:
-		body_txt='''    兹有我校 %s 籍学生 %s，性别: %s, 护照号码为 %s。其居留许可到期，现需办理学习居留许可延期手续，时间为%s，请按有关规定给予办理为谢。\n    居留许可到期时间：%s\n    JW202表到期时间：%s\n\n\n\n
-		'''%(row[5],row[2].upper(),row[4],ppNo,ymd_todo,ymd_permit,JW202)
 		body=doc.add_paragraph()
-		body_run=body.add_run(body_txt)
+		
+		body1='    兹有我校'
+		body1_run=body.add_run(body1)
 		paragraph_format = body.paragraph_format
 		paragraph_format.line_spacing = docx.shared.Pt(30)
-		font.underline = False
+		fill1=' %s '%row[5]
+		fill1_run=body.add_run(fill1)
+		font = fill1_run.font
+		font.underline = True
+		
+		body2='籍学生'
+		body2_run=body.add_run(body2)
+		fill2='%s'%row[2].upper()
+		fill2_run=body.add_run(fill2)
+		font = fill2_run.font
+		font.underline = True
+		
+		body3=', 性别：'
+		body3_run=body.add_run(body3)
+		fill3='%s'%row[4]
+		fill3_run=body.add_run(fill3)
+		font = fill3_run.font
+		font.underline = True
+
+		body4='，护照号码为'
+		body4_run=body.add_run(body4)
+		fill4='%s'%ppNo
+		fill4_run=body.add_run(fill4)
+		font = fill4_run.font
+		font.underline = True
+
+		body5='。其居留许可到期，现需办理学习居留许可延期手续，时间为'
+		body5_run=body.add_run(body5)
+		fill5='%s'%ymd_todo
+		fill5_run=body.add_run(fill5)
+		font = fill5_run.font
+		font.underline = True
+
+		body6='，请按有关规定给予办理为谢。\n    居留许可到期时间：'
+		body6_run=body.add_run(body6)
+		fill6='%s'%ymd_permit
+		fill6_run=body.add_run(fill6)
+		font = fill6_run.font
+		font.underline = True
+
+		body7='\n    JW202表到期时间：'
+		body7_run=body.add_run(body7)
+		fill7='%s'%JW202
+		fill7_run=body.add_run(fill7)
+		font = fill7_run.font
+		font.underline = True
+
+		body8='\n\n\n\n'
+		body8_run=body.add_run(body8)
 
 	year='年'
 	month='月'
