@@ -24,13 +24,10 @@ for row in todolist:
 	print (row)
 	ymd_permit=str(row[7]).replace('/','.')
 	ymd_permit=ymd_permit.split('.')
-	if new == 'Y':
-		ymd_todo=str(int(ymd_permit[0])+1)+'年'+ymd_permit[1]+'月'+ymd_permit[-1]+'日'
+	if int(ymd_permit[1])==1:
+		ymd_todo=ymd_permit[0]+'年'+'12'+'月'+ymd_permit[-1]+'日'
 	else:
-		if int(ymd_permit[1])==1:
-			ymd_todo=ymd_permit[0]+'年'+'12'+'月'+ymd_permit[-1]+'日'
-		else:
-			ymd_todo=str(int(ymd_permit[0])+1)+'年'+str(int(ymd_permit[1])-1)+'月'+ymd_permit[-1]+'日'
+		ymd_todo=str(int(ymd_permit[0])+1)+'年'+str(int(ymd_permit[1])-1)+'月'+ymd_permit[-1]+'日'
 	ymd_permit=ymd_permit[0]+'年'+ymd_permit[1]+'月'+ymd_permit[-1]+'日'
 	#print (ymd_todo)
 	#doc = Document()
@@ -65,13 +62,22 @@ for row in todolist:
 		ppNo=str(int(row[6]))
 	except:
 		ppNo=row[6]
-	body_txt='''    兹有我校 %s 籍学生 %s，性别: %s, 护照号码为 %s。其居留许可到期，现需办理学习居留许可延期手续，时间为%s，请按有关规定给予办理为谢。\n    居留许可到期时间：%s\n    JW202表到期时间：%s\n\n\n\n
-	'''%(row[5],row[2].upper(),row[4],ppNo,ymd_todo,ymd_permit,JW202)
-	body=doc.add_paragraph()
-	body_run=body.add_run(body_txt)
-	paragraph_format = body.paragraph_format
-	paragraph_format.line_spacing = docx.shared.Pt(30)
-	font.underline = False
+	if new=='Y':
+		body_txt='''    兹有我校 %s 籍学生 %s，性别: %s, 护照号码为 %s。其居留许可到期，现需办理学习居留许可延期手续，时间为%s，请按有关规定给予办理为谢。\n    JW202表到期时间：%s\n\n\n\n
+		'''%(row[5],row[2].upper(),row[4],ppNo,ymd_todo,JW202)
+		body=doc.add_paragraph()
+		body_run=body.add_run(body_txt)
+		paragraph_format = body.paragraph_format
+		paragraph_format.line_spacing = docx.shared.Pt(30)
+		font.underline = False
+	else:
+		body_txt='''    兹有我校 %s 籍学生 %s，性别: %s, 护照号码为 %s。其居留许可到期，现需办理学习居留许可延期手续，时间为%s，请按有关规定给予办理为谢。\n    居留许可到期时间：%s\n    JW202表到期时间：%s\n\n\n\n
+		'''%(row[5],row[2].upper(),row[4],ppNo,ymd_todo,ymd_permit,JW202)
+		body=doc.add_paragraph()
+		body_run=body.add_run(body_txt)
+		paragraph_format = body.paragraph_format
+		paragraph_format.line_spacing = docx.shared.Pt(30)
+		font.underline = False
 
 	year='年'
 	month='月'
