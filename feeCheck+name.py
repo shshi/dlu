@@ -50,6 +50,7 @@ def check(i):
 
         table1=d.find_element_by_class_name('tp')
         table_rows = table1.find_elements_by_tag_name('tr')
+        due=''
         for tr in table_rows:      
             td =  tr.find_elements_by_tag_name('td')
             if '学号' in td[0].text:
@@ -66,6 +67,11 @@ def check(i):
                 row_val=row_val[:4]+row_val[5:]
                 if '—' not in row_val[8]:
                     data.append(row_val)
+                    due='yes'
+        if due != 'yes':
+            with open('paid.txt','a') as p:
+                p.write(i+'\n')            
+			
     except Exception as e:
         #print (e)
         print ('未查到该生：%s'%i)
@@ -94,7 +100,7 @@ if __name__ == "__main__":
     firefoxProfile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so', 'false') #禁加载Flash
     firefoxProfile.accept_untrusted_certs = True
     options = Options()
-    #options.add_argument('-headless') #无浏览器参数
+    options.add_argument('-headless') #无浏览器参数
     d=webdriver.Firefox(firefoxProfile, options=options)
     d.set_window_size(1600, 900)
     print ("initiating..." )
