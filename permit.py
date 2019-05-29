@@ -4,6 +4,7 @@ from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import xlrd
 import time
+import datetime
 todolist=[]
 workbook = xlrd.open_workbook('todolist.xlsx')
 table = workbook.sheets()[0]
@@ -186,6 +187,8 @@ for row in todolist:
 		doc.add_page_break()
 		doc.add_paragraph()
 
-doc.save('permit.docx')
+today = datetime.date.today()
+#today=str(today).replace('-','')
+doc.save('permit_%s.docx'%today)
 print ('已成功生成文件！')
 time.sleep(7)
