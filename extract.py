@@ -13,12 +13,12 @@ class extract():
 		self.id_list = self.sheet1.col_values(3)
 
 	def getList(self):
-		with open('error1.txt','r') as fp:
+		with open('list.txt','r') as fp:
 			self.list=[]
 			self.list.append(self.sheet1.row_values(0))
 			#print (a)
 			for i in fp:
-				i=i.strip('\n')
+				i=i.strip('\n').upper()
 				if i in self.id_list:
 					row_num=self.id_list.index(i)
 					matched=self.sheet1.row_values(row_num)
@@ -34,6 +34,7 @@ class extract():
 					self.list.append(matched)
 				else:
 					print ('数据库中没有匹配到该生信息：%s'%i)
+					self.list.append(['%s'%i])
 		print (self.list)
 		return self.list
 		
