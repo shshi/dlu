@@ -19,6 +19,13 @@ for i in range(0,nrows):
 	todolist.append(rowValues)
 todolist.remove(todolist[0])
 #print (todolist)
+
+doc = Document('.\\template_blank.docx')
+style = doc.styles['Normal']
+font = style.font
+font.name = 'Times New Roman'
+font.size = docx.shared.Pt(16)
+	
 for row in todolist:
 	print (row)
 	ymd_permit=str(row[7]).replace('/','.')
@@ -29,14 +36,7 @@ for row in todolist:
 		ymd_todo=str(int(ymd_permit[0])+1)+'年'+str(int(ymd_permit[1])-1)+'月'+ymd_permit[-1]+'日'
 	ymd_permit=ymd_permit[0]+'年'+ymd_permit[1]+'月'+ymd_permit[-1]+'日'
 	#print (ymd_todo)
-	#doc = Document()
-	doc = Document('.\\template_blank.docx')
-	style = doc.styles['Normal']
-	font = style.font
-	font.name = 'Times New Roman'
-	font.size = docx.shared.Pt(16)
 
-	#doc.add_heading('Document Title', 0)
 	title=doc.add_paragraph()
 	title_run=title.add_run('证  明\n\n')
 	font = title_run.font
@@ -182,7 +182,9 @@ for row in todolist:
 	end_run=end.add_run(end_txt)
 	paragraph_format = end.paragraph_format
 	paragraph_format.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-	
-	doc.save('%s.docx'%row[1])
-print ('已成功生成所有文件！')
+	if row!=todolist[-1]:
+		doc.add_page_break()
+
+doc.save('permit.docx')
+print ('已成功生成文件！')
 time.sleep(7)
