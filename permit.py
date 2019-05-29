@@ -184,6 +184,7 @@ for row in todolist:
 	paragraph_format.alignment = WD_ALIGN_PARAGRAPH.RIGHT
 	if row!=todolist[-1]:
 		doc.add_page_break()
+		doc.add_paragraph()
 
 doc.save('permit.docx')
 print ('已成功生成文件！')
