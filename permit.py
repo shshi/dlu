@@ -5,6 +5,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 import xlrd
 import time
 import datetime
+import re
 todolist=[]
 workbook = xlrd.open_workbook('todolist.xlsx')
 table = workbook.sheets()[0]
@@ -33,8 +34,12 @@ for row in todolist:
 	ymd_permit=ymd_permit.split('.')
 	if int(ymd_permit[1])==1:
 		ymd_todo=ymd_permit[0]+'年'+'12'+'月'+ymd_permit[-1]+'日'
+		ymd_todo_bijiao=ymd_permit[0]+'.12'
+		ymd_todo_bijiao=ymd_todo_bijiao.split('.')
 	else:
 		ymd_todo=str(int(ymd_permit[0])+1)+'年'+str(int(ymd_permit[1])-1)+'月'+ymd_permit[-1]+'日'
+		ymd_todo_bijiao=str(int(ymd_permit[0])+1)+'.'+str(int(ymd_permit[1])-1)
+		ymd_todo_bijiao=ymd_todo_bijiao.split('.')
 	ymd_permit=ymd_permit[0]+'年'+ymd_permit[1]+'月'+ymd_permit[-1]+'日'
 	#print (ymd_todo)
 
@@ -54,14 +59,49 @@ for row in todolist:
 	font.size = docx.shared.Pt(18)
 	#paragraph_format = date.paragraph_format
 	#paragraph_format.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-	ymd_202=str(row[8]).replace('/','.')
-	ymd_202=ymd_202.split('.')
-	ymd_202=ymd_202[0]+'年'+ymd_202[1]+'月'
-	JW202=ymd_202
+	if str(row[8])=='':
+		JW202='X年X月X日'
+	else:
+		ymd_202=str(row[8]).replace('/','.')
+		ymd_202_bijiao=ymd_202
+		ymd_202_bijiao=ymd_202_bijiao.split('.')
+		ymd_202=ymd_202.split('.')
+		ymd_202=ymd_202[0]+'年'+ymd_202[1]+'月'
+		JW202=ymd_202
+		print (ymd_202_bijiao[0],ymd_todo_bijiao[0])
+		if ymd_202_bijiao[0]==ymd_todo_bijiao[0] and int(ymd_202_bijiao[1])<int(ymd_todo_bijiao[1]):
+			if int(ymd_202_bijiao[1]) in [1,3,5,7,8,10,12]:
+				ymd_todo=ymd_202_bijiao[0]+'年'+ymd_202_bijiao[1]+'月'+'31日'
+			elif int(ymd_202_bijiao[1])==2:
+				if (int(ymd_202_bijiao[0])%4==0 and int(ymd_202_bijiao[0])%100!=0) or (int(ymd_202_bijiao[0])%400==0):
+					ymd_todo=ymd_202_bijiao[0]+'年'+ymd_202_bijiao[1]+'月'+'29日'
+				else:
+					ymd_todo=ymd_202_bijiao[0]+'年'+ymd_202_bijiao[1]+'月'+'28日'
+			else:
+				ymd_todo=ymd_202_bijiao[0]+'年'+ymd_202_bijiao[1]+'月'+'30日'
+			with open('log.txt','a') as p:
+			
+				p.write('JW202需更新：'+row[1].upper()+'\n')
+		elif ymd_202_bijiao[0]<ymd_todo_bijiao[0]:
+			if ymd_202_bijiao[1] in [1,3,5,7,8,10,12]:
+				ymd_todo=ymd_202_bijiao[0]+'年'+ymd_202_bijiao[1]+'月'+'31日'
+			elif ymd_202_bijiao[1]==2:
+				if (int(ymd_202_bijiao[0])%4==0 and int(ymd_202_bijiao[0])%100!=0) or (int(ymd_202_bijiao[0])%400==0):
+					ymd_todo=ymd_202_bijiao[0]+'年'+ymd_202_bijiao[1]+'月'+'29日'
+				else:
+					ymd_todo=ymd_202_bijiao[0]+'年'+ymd_202_bijiao[1]+'月'+'28日'
+			else:
+				ymd_todo=ymd_202_bijiao[0]+'年'+ymd_202_bijiao[1]+'月'+'30日'	
+			with open('log.txt','a') as p:
+				p.write('JW202需更新：'+row[1].upper()+'\n')
+
 	try:
 		ppNo=str(int(row[6]))
 	except:
 		ppNo=row[6]
+	
+
+
 	if new=='Y':
 		'''body_txt="    兹有我校 %s 籍学生 %s，性别: %s, 护照号码为 %s。其居留许可到期，现需办理学习居留许可延期手续，时间为%s，请按有关规定给予办理为谢。\n    JW202表到期时间：%s\n\n\n\n"%(row[5],row[2].upper(),row[4],ppNo,ymd_todo,JW202)
 		body=doc.add_paragraph()
@@ -142,14 +182,26 @@ for row in todolist:
 		fill3_run=body.add_run(fill3)
 		font = fill3_run.font
 		font.underline = True
-
-		body4='，护照号码为'
-		body4_run=body.add_run(body4)
-		fill4='%s'%ppNo
-		fill4_run=body.add_run(fill4)
-		font = fill4_run.font
-		font.underline = True
-
+		if row[9]=='':
+			body4='，护照号码为'
+			body4_run=body.add_run(body4)
+			fill4='%s'%ppNo
+			fill4_run=body.add_run(fill4)
+			font = fill4_run.font
+			font.underline = True
+		else:
+			body4='，旧护照号码为'
+			body4_run=body.add_run(body4)
+			fill4='%s'%ppNo
+			fill4_run=body.add_run(fill4)
+			font = fill4_run.font
+			font.underline = True
+			body41='，新护照号码为'
+			body41_run=body.add_run(body41)
+			fill41='%s'%row[9]
+			fill41_run=body.add_run(fill41)
+			font = fill41_run.font
+			font.underline = True			
 		body5='。其居留许可到期，现需办理学习居留许可延期手续，时间为'
 		body5_run=body.add_run(body5)
 		fill5='%s'%ymd_todo
