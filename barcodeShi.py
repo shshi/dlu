@@ -12,16 +12,16 @@ with open('roll.txt','r') as roll:
 	for i in roll:
 		i=i.strip().strip('\n')
 		
-		i_lst=list(i)
+		'''i_lst=list(i)
 		fstN=re.findall(r'\d',i)[0]
 		pstn=i_lst.index(fstN)
 		i_lst.insert(pstn,'1')
 		i_new=''.join(i_lst)
-		#print (i_new)
+		print (i_new)'''
 		
 		#code128.image("LX14164152").save("LX14164152.jpg")
 		ttfont = ImageFont.truetype("C:\Windows\Fonts\Arial.ttf",20)
-		bar = code128.image(i_new)
+		bar = code128.image(i)
 		org_width, org_height = bar.size
 		print (org_width, ' ', org_height)
 		
