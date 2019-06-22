@@ -1,4 +1,5 @@
 #-*- coding: utf-8 -*-
+import os
 import time
 import datetime
 import docx
@@ -23,14 +24,20 @@ class Graduate:
 		
 		frame=tk.Frame(root)
 		frame.pack()
-		NCC_btn=tk.Button(frame,text='No Criminal Certificate',command=self.loopNCC)
-		NCC_btn.pack(side=tk.LEFT)
-		MC_btn=tk.Button(frame,text='Migration Certificate',command=self.loopMC)
-		MC_btn.pack(side=tk.LEFT)
-		SC_CN_btn=tk.Button(frame,text='Study Certificate (Chinese)',command=self.loopSC_CN)
-		SC_CN_btn.pack(side=tk.LEFT)
-		SC_EN_btn=tk.Button(frame,text='Study Certificate (English)',command=self.loopSC_CN)
-		SC_EN_btn.pack(side=tk.LEFT)
+		tk.Button(frame,text='No Criminal Certificate',command=self.loopNCC).pack(side=tk.LEFT)
+		tk.Button(frame,text='Migration Certificate',command=self.loopMC).pack(side=tk.LEFT)
+		tk.Button(frame,text='Study Certificate (Chinese)',command=self.loopSC_CN).pack(side=tk.LEFT)
+		tk.Button(frame,text='Study Certificate (English)',command=self.loopSC_EN).pack(side=tk.LEFT)
+		frame=tk.Frame(root)
+		frame.pack()
+
+		tk.Label(root,text='\nPowered by@ShaoTech\nCopyriht © 大理大学留学生教育服务中心 版权所有\n如有问题请联系：石少华，Email: shi.sh@foxmail.com').pack(side=tk.BOTTOM)
+		README_btn=tk.Button(frame,text='使用说明',command=self.ReadMe)
+		README_btn.pack(side=tk.TOP)
+
+	def ReadMe(self):
+		#os.system('README.txt')
+		showinfo('使用说明','\n此程序所在文件夹中需有如下两个文件：\n1. 命名为graduate.xlsx的Excel文件。此文件为待做学生信息文件，Excel第一行为表头，从左到右应依次为：\n序号，学号，护照姓名，中文名，性别(格式为Male/Female)，护照号，生日(英文)，国籍(英文)\n2. 命名为template_blank.docx的大理大学留学生教育服务中心模版文件。若无此文件，生成的文件中将无页眉页脚。\n\n使用方法：\n1. 将待做学生信息写入graduate.xlsx\n2. 直接双击运行graduate_tk.py')
 		
 	def NCC(self,doc,row,newPage):
 		title=doc.add_paragraph()
@@ -66,6 +73,7 @@ class Graduate:
 		if row[1][0]=='Y' or row[1][0]=='y':
 			Grade=row[1][1:5]
 		body_txt='''This is to certify that %s%s (passport No. %s; student No. %s) has no disciplinary records against the rules and regulations of Dali University and has no Chinese judicial office records of committing any offense against Chinese criminal laws during %s study in P.R. China from September %s to till now.\n\nCertified by\n'''%(Sex,Name,PPNo,RollNo,HeShe,Grade)
+
 		body=doc.add_paragraph()
 		body_run=body.add_run(body_txt)
 		body.paragraph_format.line_spacing = docx.shared.Pt(30)
@@ -84,6 +92,7 @@ class Graduate:
 			
 		else:
 			doc.save('NCC_%s.docx'%today_appen)
+			showinfo('提示','生成完毕！')
 			
 	def MC(self,doc,row,newPage):
 		title=doc.add_paragraph()
@@ -119,6 +128,10 @@ class Graduate:
 		Nation=row[7]
 
 		body_txt='''This university has no objection to the admission of %s%s, from %s, bearing Dali University’s registration No. %s, passport No. %s, born on %s, for %s further study in any institution or university in any country.\n\nWe wish %s success in life.\n\n\n'''%(Sex,Name,Nation,RollNo,PPNo,DOB,HeShe,HeShe)
+		infoNeed=list([Sex,Name,Nation,RollNo,PPNo,DOB,HeShe,HeShe])
+		if len([a for a in infoNeed if a.strip()==''])>0:
+			print ('有缺失信息，请补全后再试！')
+			showinfo('提示','有必填信息缺失，请补全后再试！')
 		body=doc.add_paragraph()
 		body_run=body.add_run(body_txt)
 		paragraph_format = body.paragraph_format
@@ -136,6 +149,7 @@ class Graduate:
 			
 		else:
 			doc.save('MC_%s.docx'%today_appen)
+			showinfo('提示','生成完毕！')
 
 	def SC_CN(self,doc,row,newPage):
 		title=doc.add_paragraph()
@@ -167,6 +181,24 @@ class Graduate:
 			Nation='孟加拉国'
 		elif 'Ivory Cost' in Nation:
 			Nation='科特迪瓦'
+		elif 'Laos' in Nation:
+			Nation='老挝'
+		elif 'Cambodia' in Nation:
+			Nation='柬埔寨'
+		elif 'Tanzania' in Nation:
+			Nation='坦桑尼亚'
+		elif 'Viet' in Nation:
+			Nation='越南'
+		elif 'Somalia' in Nation:
+			Nation='索马里'
+		elif 'Burma' in Nation or 'Myanmar' in Nation:
+			Nation='缅甸'
+		elif 'Zambia' in Nation:
+			Nation='赞比亚'
+		elif 'Yemen' in Nation:
+			Nation='也门'
+		elif 'Mongolia' in Nation:
+			Nation='蒙古'
 
 		body=doc.add_paragraph()
 		body.paragraph_format.line_spacing = docx.shared.Pt(30)
@@ -190,6 +222,11 @@ class Graduate:
 		body.add_run('临床医学院2013级临床医学专业本科生').font.underline = True
 		body.add_run('。该生于2013年10月入学，2019年7月从我校毕业。\n\n\t特此证明。\n\n')
 
+		infoNeed=list([Sex,Name,Name_CN,PPNo,Nation])
+		if len([a for a in infoNeed if a.strip()==''])>0:
+			print ('有缺失信息，请补全后再试！')
+			showinfo('提示','有必填信息缺失，请补全后再试！')
+
 		year='年'
 		month='月'
 		day='日'
@@ -208,6 +245,7 @@ class Graduate:
 			
 		else:
 			doc.save('SC_CN_%s.docx'%today_appen)
+			showinfo('提示','生成完毕！')
 
 	def SC_EN(self,doc,row,newPage):
 		title=doc.add_paragraph()
@@ -270,6 +308,10 @@ class Graduate:
 			year_count='eighth'
 
 		body_txt='''TO WHOM IT MAY CONCERN:\n\nThis is to certify that %s%s (passport No. %s) majoring in %s is studying in %s of Dali University since September, %s. %s has been promoted to %s %s academic year studying in the year of %s.\n\nSincerely yours\n'''%(Sex,Name,PPNo,Major,School,Grade,He,HeShe,year_count,toyear)
+		infoNeed=list([Sex,Name,PPNo,Major,School,Grade,He,HeShe,year_count,toyear])
+		if len([a for a in infoNeed if a.strip()==''])>0:
+			print ('有缺失信息，请补全后再试！')
+			showinfo('提示','有必填信息缺失，请补全后再试！')
 		body=doc.add_paragraph()
 		body_run=body.add_run(body_txt)
 		paragraph_format = body.paragraph_format
@@ -286,6 +328,7 @@ class Graduate:
 			doc.add_paragraph()
 		else:
 			doc.save('SC_EN_%s.docx'%today_appen)
+			showinfo('提示','生成完毕！')
 			
 	def loopNCC(self):#No Criminal Certificate
 		doc = Document('.\\template_blank.docx')
@@ -294,12 +337,15 @@ class Graduate:
 		font.name = 'Times New Roman'
 		font.size = docx.shared.Pt(16)
 		for row in self.todolist:
+			infoNeed=list([row[1],row[2],row[4],row[5]])
+			if len([a for a in infoNeed if a.strip()==''])>0:
+				showinfo('提示','有必填信息缺失，请补全后再试！')
+				break
 			if row!=self.todolist[-1]:
 				newPage='Y'
 			else:
 				newPage='N'
 			self.NCC(doc,row,newPage)
-		showinfo('提示','生成完毕！')
 		
 	def loopMC(self):#Migration Certificate
 		doc = Document('.\\template_blank.docx')
@@ -308,12 +354,16 @@ class Graduate:
 		font.name = 'Times New Roman'
 		font.size = docx.shared.Pt(16)
 		for row in self.todolist:
+			infoNeed=list([row[1],row[2],row[4],row[5],row[6],row[7]])
+			if len([a for a in infoNeed if a.strip()==''])>0:
+				showinfo('提示','有必填信息缺失，请补全后再试！')
+				break
 			if row!=self.todolist[-1]:
 				newPage='Y'
 			else:
 				newPage='N'
 			self.MC(doc,row,newPage)
-		showinfo('提示','生成完毕！')
+
 		
 	def loopSC_CN(self):#Study Certificate in Chinese language
 		doc = Document('.\\template_blank.docx')
@@ -322,12 +372,16 @@ class Graduate:
 		font.name = 'Times New Roman'
 		font.size = docx.shared.Pt(16)
 		for row in self.todolist:
+			infoNeed=list([row[1],row[2],row[3],row[4],row[5],row[7]])
+			if len([a for a in infoNeed if a.strip()==''])>0:
+				showinfo('提示','有必填信息缺失，请补全后再试！')
+				break
 			if row!=self.todolist[-1]:
 				newPage='Y'
 			else:
 				newPage='N'
 			self.SC_CN(doc,row,newPage)
-		showinfo('提示','生成完毕！')
+
 		
 	def loopSC_EN(self):#Study Certificate in English language
 		doc = Document('.\\template_blank.docx')
@@ -336,21 +390,23 @@ class Graduate:
 		font.name = 'Times New Roman'
 		font.size = docx.shared.Pt(16)
 		for row in self.todolist:
+			infoNeed=list([row[1],row[2],row[4],row[5],row[6],row[7]])
+			if len([a for a in infoNeed if a.strip()==''])>0:
+				showinfo('提示','有必填信息缺失，请补全后再试！')
+				break
 			if row!=self.todolist[-1]:
 				newPage='Y'
 			else:
 				newPage='N'
 			self.SC_EN(doc,row,newPage)
-		showinfo('提示','生成完毕！')
 		
 root=tk.Tk()
 root.title('学生各类证明生成器')
+#root.geometry('370x850')
+#root.minsize(200, 200)
 
 Select=tk.Label(root,text='\n请选择要生成的文件')
 Select.pack()
 
 app=Graduate(root)
-
-foot=tk.Label(root,text='\nPowered by@ShaoTech\nCopyriht © 大理大学留学生教育服务中心 版权所有\n如有问题请联系：石少华，Email: shi.sh@foxmail.com')
-foot.pack()
 root.mainloop()
