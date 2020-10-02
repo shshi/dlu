@@ -82,5 +82,5 @@ def getList():
     pmList=[i.get('xm') for i in pm_data]
     pm_namelist=','.join(pmList)
     print (len(pmList),pm_namelist)
-    s.get("https://sc.ftqq.com/SCU116101T61a8ca1681c03371dce8d6307677fa835f74444c3f752.send?text=早上%s人未打卡，晚上%s人未打卡。\n具体名单：\nam: %s\npm：%s。"%(len(amList),len(pmList),amList,pmList))
+    s.get("https://sc.ftqq.com/SCU116101T61a8ca1681c03371dce8d6307677fa835f74444c3f752.send?text=早上%s人未打卡，晚上%s人未打卡。\n具体名单：\nam: %s\npm：%s。"%(len(amList),len(pmList),am_namelist,pm_namelist))
 getList()
