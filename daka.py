@@ -72,13 +72,15 @@ def getList():
     am_data="["+am_data+"]"
     am_data = json.loads(am_data)
     amList=[i.get('xm') for i in am_data]
-    print (len(amList),amList)
+    am_namelist=','.join(amList)
+    print (len(amList),am_namelist)
 
     pm_data = pm_list.text
     pm_data=pm_data.split('[')[-1].split(']')[0]
     pm_data="["+pm_data+"]"
     pm_data = json.loads(pm_data)
     pmList=[i.get('xm') for i in pm_data]
-    print (len(pmList),pmList)
+    pm_namelist=','.join(pmList)
+    print (len(pmList),pm_namelist)
     s.get("https://sc.ftqq.com/SCU116101T61a8ca1681c03371dce8d6307677fa835f74444c3f752.send?text=早上%s人未打卡，晚上%s人未打卡。\n具体名单：\nam: %s\npm：%s。"%(len(amList),len(pmList),amList,pmList))
 getList()
