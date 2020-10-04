@@ -26,16 +26,6 @@ def getList():
                 "Referer":"http"
                 }
 
-    headers_list = {"Host":"202.203.16.42",
-                "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv",
-                "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-                "Accept-Language":"zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2",
-                "Accept-Encoding":"gzip, deflate",
-                "Connection":"keep-alive",
-                "Referer":"http",
-                "Cookie":"username=920714; menuVisible=1; JSESSIONID=14575AB880CA6C379F8533DDF6305EC2-n1.jvm5",
-                "Upgrade-Insecure-Requests":"1"}
-
     login_data = {"username":"OTIwNzE0", "password":"MTIzNDU2", "verification":"", "token":"3578abfe-cdaf-417a-a023-6415896a2103"}
     list_data = {"type":"XSFXTWJC","xmid":"4a4b90aa73faf66a0174116ae01b0a14"}
     body_data = {"pageIndex":"0","pageSize":"40","sortField":"","sortOrder":""}
@@ -72,7 +62,10 @@ def getList():
     am_data="["+am_data+"]"
     am_data = json.loads(am_data)
     amList=[i.get('xm') for i in am_data]
-    am_namelist=','.join(amList)
+    if len(amList)==0:
+        am_namelist=''
+    else:
+        am_namelist='\n上午未打卡名单：'+','.join(amList)+"; "
     print (len(amList),am_namelist)
 
     pm_data = pm_list.text
@@ -80,7 +73,48 @@ def getList():
     pm_data="["+pm_data+"]"
     pm_data = json.loads(pm_data)
     pmList=[i.get('xm') for i in pm_data]
-    pm_namelist=','.join(pmList)
+    if len(pmList)==0:
+        pm_namelist=''
+    else:
+        pm_namelist='\n下午未打卡名单：'+','.join(pmList)
     print (len(pmList),pm_namelist)
-    s.get("https://sc.ftqq.com/SCU116101T61a8ca1681c03371dce8d6307677fa835f74444c3f752.send?text=早上%s人未打卡，晚上%s人未打卡。\n具体名单：\nam: %s\npm：%s。"%(len(amList),len(pmList),am_namelist,pm_namelist))
+    serverURL="https://sc.ftqq.com/SCU116101T61a8ca1681c03371dce8d6307677fa835f74444c3f752.send"
+    sendTitle="早上%s人未打卡，晚上%s人未打卡。"%(len(amList),len(pmList))
+    sendContent="%s%s"%(am_namelist,pm_namelist)
+    params= {'text':sendTitle, 'desp':sendContent}
+    resp=s.get(serverURL,params=params)
+    print (resp)
+
+    time.sleep(1800)
+    am_list = s.post("http://202.203.16.42/syt/zzglappro/queryNotExistList.htm?type=XSFXTWJC&xmid=4a4b90aa73fad84c017411601830099d", data=body_data,headers=headers_list)
+    pm_list = s.post("http://202.203.16.42/syt/zzglappro/queryNotExistList.htm?type=XSFXTWJC&xmid=4a4b90aa73faf66a0174116ae01b0a14", data=body_data,headers=headers_list)
+
+    am_data = am_list.text
+    am_data=am_data.split('[')[-1].split(']')[0]
+    am_data="["+am_data+"]"
+    am_data = json.loads(am_data)
+    amList=[i.get('xm') for i in am_data]
+    if len(amList)==0:
+        am_namelist=''
+    else:
+        am_namelist='\n上午未打卡名单：'+','.join(amList)+"; "
+    print (len(amList),am_namelist)
+
+    pm_data = pm_list.text
+    pm_data=pm_data.split('[')[-1].split(']')[0]
+    pm_data="["+pm_data+"]"
+    pm_data = json.loads(pm_data)
+    pmList=[i.get('xm') for i in pm_data]
+    if len(pmList)==0:
+        pm_namelist=''
+    else:
+        pm_namelist='\n下午未打卡名单：'+','.join(pmList)
+    print (len(pmList),pm_namelist)
+    serverURL="https://sc.ftqq.com/SCU116101T61a8ca1681c03371dce8d6307677fa835f74444c3f752.send"
+    sendTitle="早上%s人未打卡，晚上%s人未打卡。"%(len(amList),len(pmList))
+    sendContent="%s%s"%(am_namelist,pm_namelist)
+    params= {'text':sendTitle, 'desp':sendContent}
+    resp=s.get(serverURL,params=params)
+    print (resp)
+    #s.get("https://sc.ftqq.com/SCU116101T61a8ca1681c03371dce8d6307677fa835f74444c3f752.send?text=早上%s人未打卡，晚上%s人未打卡。\n具体名单：\nam: %s\npm：%s。"%(len(amList),len(pmList),am_namelist,pm_namelist))
 getList()
