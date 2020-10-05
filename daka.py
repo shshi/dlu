@@ -65,7 +65,7 @@ def getList():
     if len(amList)==0:
         am_namelist=''
     else:
-        am_namelist='\n上午未打卡名单：'+','.join(amList)+"; "
+        am_namelist='\n早上未打卡名单：'+','.join(amList)+"; "
     print (len(amList),am_namelist)
 
     pm_data = pm_list.text
@@ -76,7 +76,7 @@ def getList():
     if len(pmList)==0:
         pm_namelist=''
     else:
-        pm_namelist='\n下午未打卡名单：'+','.join(pmList)
+        pm_namelist='\n晚上未打卡名单：'+','.join(pmList)
     print (len(pmList),pm_namelist)
     serverURL="https://sc.ftqq.com/SCU116101T61a8ca1681c03371dce8d6307677fa835f74444c3f752.send"
     sendTitle="早上%s人未打卡，晚上%s人未打卡。"%(len(amList),len(pmList))
