@@ -62,7 +62,7 @@ def getList():
     if len(amList)==0:
         am_namelist=''
     else:
-        am_namelist='\n上午未打卡名单：'+','.join(amList)+"; "
+        am_namelist='\n, 未打卡名单：'+','.join(amList)+"; "
     print ('早上%d人未打卡 '%len(amList),am_namelist)
 
     pm_data = pm_list.text
@@ -73,8 +73,8 @@ def getList():
     if len(pmList)==0:
         pm_namelist=''
     else:
-        pm_namelist='\n下午未打卡名单：'+','.join(pmList)
-    return ('早上%d人未打卡, %s \n晚上%d人未打卡 %s'%(len(amList),am_namelist,len(pmList),pm_namelist))
+        pm_namelist='\n, 未打卡名单：'+','.join(pmList)
+    return ('早上%d人未打卡%s \n晚上%d人未打卡%s'%(len(amList),am_namelist,len(pmList),pm_namelist))
 
     
 if __name__ == '__main__':
